@@ -1,6 +1,5 @@
 local M = {}
 
-
 M.setup_inlay_hints = function (opts)
   opts = opts or {}
 
@@ -43,14 +42,17 @@ M.get_callback = function(opts)
 
     for _, hint in ipairs(hint_store) do
       local finish = hint.range['end'].line
+      local text
 
       if aligned then
         local line_len = #vim.api.nvim_buf_get_lines(bufnr, finish, finish + 1, false)[1]
         local spaces_prefix = string.rep(' ', longest_line_len - line_len)
-        vim.api.nvim_buf_set_virtual_text(bufnr, inlay_hints_ns, finish, { { spaces_prefix..prefix..hint.label, highlight } }, {})
+        text = spaces_prefix .. prefix .. hint.label
       else
-        vim.api.nvim_buf_set_virtual_text(bufnr, inlay_hints_ns, finish, { { prefix..hint.label, highlight } }, {})
+        text = prefix .. hint.label
       end
+
+      vim.api.nvim_buf_set_virtual_text(bufnr, inlay_hints_ns, finish, { { text, highlight } }, {})
     end
   end
 end
